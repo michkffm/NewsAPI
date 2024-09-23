@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter,  Routes, Route } from 'react-router-dom';
 import NewsSources from './views/NewsSources';
 import './App.css';
 import Header from "./components/Header";
@@ -7,7 +7,7 @@ import TopHeadlinesPage from "./views/TopHeadlinesPage";
 
 function App() {
   return (
-    <Router>
+    <HashRouter>
       <Header />
       <div className="App">
         <Routes>
@@ -16,7 +16,7 @@ function App() {
           <Route path="/news-sources" element={<NewsSources />} />
         </Routes>
       </div>
-    </Router>
+    </HashRouter>
   );
 }
 
