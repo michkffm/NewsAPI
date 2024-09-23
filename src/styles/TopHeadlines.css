@@ -1,0 +1,15 @@
+.headlines-list {
+  list-style-type: none; 
+  padding: 0;
+}
+
+.headlines-list li {
+  padding: 10px;
+  border-bottom: 1px solid #ccc; 
+  cursor: pointer;
+  transition: background-color 0.3s; 
+}
+
+.headlines-list li:hover {
+  background-color: #48ad29;
+}
