@@ -8,13 +8,15 @@ function TopHeadlinesPage() {
 
   useEffect(() => {
     const apiKey = '0b79abf6e76e48dfa741fce370a1f6b7';
-    const url = `https://newsapi.org/v2/top-headlines?country=de&apiKey=${apiKey}`;
+    const url = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKey}`; // Ändere hier den Country Code
 
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        if (data.status === 'ok') {
+        if (data.status === 'ok' && data.articles.length > 0) {
           setTopHeadlines(data.articles);
+        } else if (data.articles.length === 0) {
+          setError('Keine Nachrichten verfügbar.');
         } else {
           setError(data.message || 'Ein unbekannter Fehler ist aufgetreten.');
         }
@@ -33,5 +35,3 @@ function TopHeadlinesPage() {
     </div>
   );
 }
-
-export default TopHeadlinesPage;
