@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react';
 import TopHeadlines from '../components/TopHeadLines';
 import '../styles/TopHeadlines.css';
 
+
 function TopHeadlinesPage() {
   const [topHeadlines, setTopHeadlines] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const apiKey = '0b79abf6e76e48dfa741fce370a1f6b7';
-    const url = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKey}`; // Ändere hier den Country Code
+    const url = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKey}`;
 
     fetch(url)
       .then((response) => response.json())
@@ -35,3 +36,5 @@ function TopHeadlinesPage() {
     </div>
   );
 }
+
+export default TopHeadlinesPage;

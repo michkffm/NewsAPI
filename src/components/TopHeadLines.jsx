@@ -1,38 +1,43 @@
 import { useState } from 'react';
 import '../styles/TopHeadlines.css';
 
-function TopHeadlinesPage() {
-  const [topHeadlines, setTopHeadlines] = useState([]);
-  const [error, setError] = useState(null);
+export default function TopHeadlines({ articles }) {
+  const [selectedArticle, setSelectedArticle] = useState(null);
 
-  useEffect(() => {
-    const apiKey = '0b79abf6e76e48dfa741fce370a1f6b7';
-    const url = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKey}`; 
+  const handleArticleClick = (article) => {
+    setSelectedArticle(article);
+  };
 
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status === 'ok' && data.articles.length > 0) {
-          setTopHeadlines(data.articles);
-        } else if (data.articles.length === 0) {
-          setError('Keine Nachrichten verfügbar.');
-        } else {
-          setError(data.message || 'Ein unbekannter Fehler ist aufgetreten.');
-        }
-      })
-      .catch(() => setError('Netzwerkfehler, bitte versuche es später erneut.'));
-  }, []);
+  const handleBack = () => {
+    setSelectedArticle(null);
+  };
 
-  if (error) {
-    return <div>Fehler: {error}</div>;
+  if (selectedArticle) {
+    return (
+      <div>
+        <h2>{selectedArticle.title}</h2>
+        <p>{selectedArticle.description}</p>
+        <p>
+          <strong>Quelle:</strong> {selectedArticle.source.name}
+        </p>
+        <button onClick={handleBack}>Zurück zu den Headlines</button>
+      </div>
+    );
   }
 
   return (
     <div>
-      <h1>Top Headlines</h1>
-      <TopHeadlines articles={topHeadlines} />
+      <ul className="headlines-list">
+        {Array.isArray(articles) && articles.length > 0 ? (
+          articles.map((article) => (
+            <li key={article.url} onClick={() => handleArticleClick(article)}>
+              {article.title}
+            </li>
+          ))
+        ) : (
+          <p>Keine Artikel verfügbar</p>
+        )}
+      </ul>
     </div>
   );
 }
-
-export default TopHeadlinesPage;
