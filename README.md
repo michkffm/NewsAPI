@@ -1,71 +1,37 @@
-readme_content = """
-# NewsApp - Nachrichten zu den wichtigsten Themen
+# News App – BR24
 
-## Projektbeschreibung
+React-App mit aktuellen Meldungen aus dem offiziellen BR24-RSS-Feed. Kostenlos und ohne API-Schlüssel. Nur für nichtkommerzielle Nutzung gemäß den [BR-Bedingungen](https://www.br.de/service/nutzungsbedingungen-rss-feeds-100.html).
 
-Die NewsApp ist eine elegante Webanwendung, die aktuelle Nachrichten zu verschiedenen Themenbereichen anzeigt. Mithilfe der News API werden Artikel zu spezifischen Kategorien abgerufen und in einem modernen, dunklen Design dargestellt. Ein besonderes Feature der App ist ein automatisch scrollendes Banner, das die Top-News prominent präsentiert.
+## Funktionen
+- Schlagzeilen mit unveränderten Feed-Beschreibungen, Quelle und Datum
+- Suche in aktuell geladenen Meldungen (kein Volltext- oder Nachrichtenarchiv)
+- Artikel und Quellenlinks öffnen in einem neuen Tab
+- Lade-, Leer- und Fehlerzustände mit erneutem Abruf
 
-## Features
+## Lokal starten
+Node.js 22 (mindestens 22.12) mit npm und Python 3 werden benötigt.
 
-- **Nachrichtensuche**: Suche nach Nachrichtenartikeln zu bestimmten Themen.
-- **Top-News-Banner**: Ein animiertes Banner zeigt die wichtigsten Nachrichten an.
-- **Dark Mode**: Elegantes, minimalistisches dunkles Design.
-- **Responsive Design**: Optimiert für Mobilgeräte und Desktops.
-- **Navigation**: Einfaches Navigationssystem zwischen den verschiedenen Seiten.
+```sh
+npm ci
+npm run build
+python3 server/app.py
+```
 
-## Installation und Nutzung
+App: http://localhost:8766. Für die Entwicklung zusätzlich `npm run dev` starten; Vite leitet `/api` zum Python-Server weiter.
 
-1. Klone das Repository:
-   ```bash
-   git clone https://github.com/dein-benutzername/NewsApp.git
+## Hosting
+Die bisherige Render Static Site kann keinen Python-Server ausführen. Eine Render Web Service ist nötig. `render.yaml` beschreibt den kostenlosen Dienst: Build `npm ci && npm run build`, Start `python3 server/app.py`. Alternativ manuell dieselben Befehle konfigurieren. `PORT` wird durch Render gesetzt; lokal standardmäßig 8766. Keine geheimen Umgebungsvariablen nötig. Kostenlose Dienste können bei Inaktivität schlafen; der erste Aufruf kann dauern.
 
-    Installiere die Abhängigkeiten:
+Der Python-Server liefert das gebaute Frontend und `/api/news` von derselben Domain. Nur eine fest konfigurierte BR-URL wird abgerufen, mit Timeout und Größenlimit. Zwischenspeicherung ausschließlich im Arbeitsspeicher für fünf Minuten, keine Datenbank und kein Archiv. Keine fremden HTML-Inhalte oder Bilder werden eingebettet. Bei Fehlern werden keine alten Meldungen ausgeliefert.
 
-    bash
-    Details immer anzeigen
+## Quelle und Datenschutz
+Quelle: BR24 / Bayerischer Rundfunk, [offizielle Feeds](https://www.br.de/service/br-rss-feeds-100.html). Der Browser lädt den Feed über unseren Server; beim Öffnen eines Originalartikels gelten die [Datenschutzhinweise des BR](https://www.br.de/unternehmen/service/datenschutz/index.html). Verfügbarkeit und dauerhafte Erlaubnis werden vom BR nicht garantiert.
 
-npm install
+Der bisher im Frontend enthaltene NewsAPI-Schlüssel wurde aus den aktiven Dateien entfernt. Der Kontoinhaber muss ihn bei NewsAPI deaktivieren, da er in alten Builds und der Git-Historie weiterhin vorkommen kann.
 
-Starte die Entwicklungsumgebung:
-
-bash
-Details immer anzeigen
-
-    npm run dev
-
-API
-
-Die Anwendung verwendet die NewsAPI, um aktuelle Nachrichtenartikel abzurufen. Für den API-Zugriff wird ein API-Schlüssel benötigt. Füge diesen in die Anwendung ein, um die Nachrichten abrufen zu können.
-
-Beispiel für den API-Aufruf:
-
-javascript
-Details immer anzeigen
-
-const API_KEY = '0b79abf6e76e48dfa741fce370a1f6b7';
-const url = `https://newsapi.org/v2/everything?q=technology&apiKey=${API_KEY}`;
-
-fetch(url)
-  .then(response => response.json())
-  .then(data => {
-    // Nachrichtenartikel verarbeiten
-  });
-
-Technologien
-
-    React: Für die komponentenbasierte Benutzeroberfläche.
-    Vite: Für eine schnelle Entwicklungsumgebung.
-    HTML, CSS, JavaScript: Grundlegende Webtechnologien für die App.
-    NewsAPI: Zum Abrufen der Nachrichtenartikel.
-    GitHub Pages: Deployment der App.
-
-Autor
-
-    Name: Michael Koch
-    GitHub: michkffm """
-
-Save this to a file
-
-file_path = "/mnt/data/README_NewsApp.md" with open(file_path, "w") as f: f.write(readme_content)
-
-file_path
+## Prüfungen
+```sh
+npm run build
+npm run lint
+python3 -m unittest discover -s server
+```

@@ -78,3 +78,8 @@ a:hover {
 .navbar nav a:hover {
   text-decoration: underline;
 }
+input[type="search"] { display:block; box-sizing:border-box; width:100%; padding:14px; margin:12px 0 24px; background:#121212; color:#fff; border:1px solid #888; border-radius:6px; font:inherit; }
+footer { margin-top:32px; border-top:1px solid #555; padding-top:20px; font-size:.9rem; line-height:1.6; }
+article h2 { font-size:1.2rem; line-height:1.45; } article p { line-height:1.6; }
+:focus-visible { outline:3px solid #ffc46b; outline-offset:4px; }
+@media(max-width:600px) { .navbar { flex-direction:column; gap:12px; } .navbar nav { display:flex; flex-wrap:wrap; gap:12px; } .navbar nav a { margin:0; } }
