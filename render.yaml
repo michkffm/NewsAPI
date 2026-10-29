@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: newsapp-guardian
+    name: newsroom-michkffm
     runtime: python
     plan: free
     buildCommand: npm ci && npm run build

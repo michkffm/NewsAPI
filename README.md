@@ -4,7 +4,9 @@
 
 Projekt von Michael Koch
 
-**Entwicklungsstand:** Oberfläche und Guardian-Anbindung sind implementiert. Der echte API-Abruf mit eigenem Schlüssel und die Veröffentlichung auf Render sind noch nicht geprüft.
+**[Live-Demo öffnen](https://newsroom-michkffm.onrender.com/)**
+
+Die App ist auf Render veröffentlicht. Nachrichtenabruf, Suche, Themen- und Zeitraumfilter, Seitenwechsel und Merkliste wurden mit der Guardian-API im Browser geprüft.
 
 Eine Nachrichten-App mit React und einer eigenen Python-API. Die Guardian Open Platform liefert Artikel, die nach Stichwort und Thema durchsucht werden können.
 
@@ -26,7 +28,7 @@ Die Artikel erscheinen überwiegend auf Englisch. Die Oberfläche lässt sich zw
 
 ## Oberfläche
 
-![Merkliste in der hellen Ansicht](docs/newsroom-light.png)
+![Veröffentlichte Guardian-Suche im Apricot-Design](docs/newsroom-live.png)
 
 Die Merkliste speichert ausschließlich Titel, Links, Ressort und Veröffentlichungsdatum im Browser, keine Artikeltexte. Mit dem Stern lassen sich Einträge hinzufügen und entfernen. Die erste Darstellung richtet sich nach dem System-Theme; eine manuelle Auswahl bleibt gespeichert. Browserdaten löschen entfernt Merkliste und Einstellungen.
 
@@ -38,7 +40,7 @@ Die Merkliste speichert ausschließlich Titel, Links, Ressort und Veröffentlich
 | Build | Vite 8, npm |
 | Backend | Python 3, Standardbibliothek |
 | Nachrichten | The Guardian Open Platform |
-| Hosting | Render-Webdienst (Konfiguration vorbereitet) |
+| Hosting | Render-Webdienst |
 
 ## API-Anbindung
 

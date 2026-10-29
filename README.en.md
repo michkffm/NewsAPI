@@ -4,7 +4,9 @@
 
 A project by Michael Koch
 
-**Development status:** The interface and Guardian integration are implemented. Requests with a real API key and the Render deployment have not yet been verified.
+**[Open the live demo](https://newsroom-michkffm.onrender.com/)**
+
+The app is deployed on Render. News retrieval, search, topic and date filters, pagination and bookmarks have been verified in the browser using the Guardian API.
 
 A news application built with React and a custom Python API. The Guardian Open Platform provides articles that can be searched by keyword and topic.
 
@@ -26,7 +28,7 @@ Articles are mainly in English. The interface supports German and English; artic
 
 ## Interface
 
-![Bookmarks in light mode](docs/newsroom-light.png)
+![Published Guardian search in the apricot theme](docs/newsroom-live.png)
 
 Bookmarks store only article titles, links, sections and publication dates in the browser, not article bodies. Use the star to add or remove entries. The initial appearance follows the system theme; a manual choice is remembered. Clearing browser data removes bookmarks and preferences.
 
@@ -38,7 +40,7 @@ Bookmarks store only article titles, links, sections and publication dates in th
 | Build | Vite 8, npm |
 | Backend | Python 3, standard library |
 | News | The Guardian Open Platform |
-| Hosting | Render web service (configuration prepared) |
+| Hosting | Render web service |
 
 ## API integration
 
