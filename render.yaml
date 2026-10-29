@@ -1,8 +1,11 @@
 services:
   - type: web
-    name: newsapp-br24
+    name: newsapp-guardian
     runtime: python
     plan: free
     buildCommand: npm ci && npm run build
     startCommand: python3 server/app.py
-    healthCheckPath: /
+    healthCheckPath: /health
+    envVars:
+      - key: GUARDIAN_API_KEY
+        sync: false

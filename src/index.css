@@ -1,68 +1,13 @@
-/* :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-} */
+* { box-sizing: border-box; }
+:root { font-family: Inter, 'Segoe UI', Arial, sans-serif; color-scheme:light; --bg:#f5f4f0; --surface:#fff; --text:#202e2c; --muted:#5e6c68; --line:#d9e0da; --accent:#245848; --soft:#e8eee6; --button-text:#fff; }
+:root[data-theme="dark"] { color-scheme:dark; --bg:#101a19; --surface:#192523; --text:#edf1e9; --muted:#afbeb7; --line:#34433e; --accent:#b7d7a5; --soft:#25392e; --button-text:#16241d; }
+body { margin:0; background:var(--bg); color:var(--text); line-height:1.6; }
+a { color:inherit; text-decoration-thickness:1px; text-underline-offset:4px; }
+button,input,select { font:inherit; }
+button { cursor:pointer; } button:disabled { opacity:.45; cursor:not-allowed; }
+button,a,input,select { -webkit-tap-highlight-color:transparent; }
+:focus-visible { outline:3px solid var(--accent); outline-offset:4px; }
+button { border:1px solid var(--line); background:var(--surface); color:var(--text); border-radius:9px; padding:10px 17px; }
+button:hover:not(:disabled) { background:var(--soft); }
+h1,h2,h3,p { margin-top:0; }
+@media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; scroll-behavior:auto!important; } }
