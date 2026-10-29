@@ -38,7 +38,7 @@ Die Merkliste speichert ausschließlich Titel, Links, Ressort und Veröffentlich
 | --- | --- |
 | Frontend | React 18, React Router 7, CSS |
 | Build | Vite 8, npm |
-| Backend | Python 3, Standardbibliothek |
+| Backend | Python 3, WSGI, Gunicorn |
 | Nachrichten | The Guardian Open Platform |
 | Hosting | Render-Webdienst |
 
@@ -56,11 +56,13 @@ Ergebnisse werden fünf Minuten im Arbeitsspeicher zwischengespeichert. Neue Anb
 
 ## Lokal starten
 
-Voraussetzungen: Node.js 22.12 oder neuer innerhalb der Version 22, npm und Python 3.
+Voraussetzungen: Node.js 22.12 oder neuer innerhalb der Version 22, npm und Python 3.10 oder neuer.
 
 ```sh
 git clone https://github.com/michkffm/NewsAPI.git
 cd NewsAPI
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
 npm ci
 npm run build
 ```
@@ -68,7 +70,7 @@ npm run build
 `GUARDIAN_API_KEY` im Terminal auf den eigenen Schlüssel setzen, ohne ihn in Dateien oder Befehlsbeispiele zu übernehmen. Anschließend:
 
 ```sh
-python3 server/app.py
+.venv/bin/python server/app.py
 ```
 
 Die App läuft unter **http://localhost:8766/**. Ohne Schlüssel erscheint eine verständliche Konfigurationsmeldung. Für die Frontendentwicklung zusätzlich `npm run dev` starten; Vite leitet `/api` an den lokalen Python-Server weiter.
@@ -80,14 +82,16 @@ Die App läuft unter **http://localhost:8766/**. Ohne Schlüssel erscheint eine 
 | `GUARDIAN_API_KEY` | Geheimer Guardian-API-Schlüssel, nur im Backend |
 | `PORT` | Serverport; lokal 8766, auf Render automatisch gesetzt |
 
-`render.yaml` beschreibt einen kostenlosen Python-Webdienst. Build: `npm ci && npm run build`. Start: `python3 server/app.py`. Den Schlüssel im Render-Dashboard als geheime Umgebungsvariable hinterlegen. Eine Render Static Site kann das Backend nicht ausführen. Kostenlose Webdienste können bei Inaktivität einschlafen und beim nächsten Aufruf Startzeit benötigen.
+`render.yaml` beschreibt einen kostenlosen Python-Webdienst. Build: `pip install -r requirements.txt && npm ci && npm run build`. Start: `gunicorn --config gunicorn.conf.py server.app:application`. Den Schlüssel im Render-Dashboard als geheime Umgebungsvariable hinterlegen. Eine Render Static Site kann das Backend nicht ausführen. Kostenlose Webdienste können bei Inaktivität einschlafen und beim nächsten Aufruf Startzeit benötigen.
 
 Die bisherige RSS-Anbindung wurde ersetzt. Frühere NewsAPI-Schlüssel können noch in der Git-Historie oder alten Builds enthalten sein und müssen beim bisherigen Anbieter deaktiviert werden.
+
+Gunicorn übernimmt die HTTP-Auslieferung im Produktivbetrieb. Ein Worker mit vier Threads teilt Cache und Abrufbegrenzung; mehrere Worker oder Instanzen benötigen eine gemeinsame Datenhaltung. `gunicorn.conf.py` legt Zeitlimits und HTTP-Anfragegrenzen fest. Der direkte Python-Start ist nur für lokale Entwicklung vorgesehen. Unter Windows die Python-Befehle mit `.venv\Scripts\python.exe` ausführen.
 
 ## Tests
 
 ```sh
-python3 -m unittest discover -s server
+.venv/bin/python -m unittest discover -s server
 npm run lint
 npm run build
 npm audit

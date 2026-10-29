@@ -3,8 +3,8 @@ services:
     name: newsroom-michkffm
     runtime: python
     plan: free
-    buildCommand: npm ci && npm run build
-    startCommand: python3 server/app.py
+    buildCommand: pip install -r requirements.txt && npm ci && npm run build
+    startCommand: gunicorn --config gunicorn.conf.py server.app:application
     healthCheckPath: /health
     envVars:
       - key: GUARDIAN_API_KEY

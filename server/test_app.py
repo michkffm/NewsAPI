@@ -95,5 +95,59 @@ class GuardianTests(unittest.TestCase):
         network.assert_not_called()
 
 
+class WsgiTests(unittest.TestCase):
+    def request(self, path, method='GET', query=''):
+        captured = {}
+        def start(status, headers):
+            captured.update(status=int(status.split()[0]), headers=dict(headers))
+        body = app.application({'PATH_INFO': path, 'REQUEST_METHOD': method, 'QUERY_STRING': query}, start)
+        try:
+            captured['body'] = b''.join(body)
+        finally:
+            if hasattr(body, 'close'):
+                body.close()
+        return captured
+
+    def test_health_and_head(self):
+        self.assertEqual(self.request('/health')['status'], 200)
+        with patch('app.get_news') as news:
+            response = self.request('/api/news', 'HEAD')
+            self.assertEqual(response['body'], b'')
+            news.assert_not_called()
+
+    def test_methods_and_missing_routes(self):
+        self.assertEqual(self.request('/api/news', 'POST')['status'], 405)
+        self.assertEqual(self.request('/api/unknown')['status'], 404)
+
+    def test_validation_and_safe_provider_error(self):
+        self.assertEqual(self.request('/api/news', query='page=0')['status'], 400)
+        with patch('app.get_news', side_effect=app.ApiError(429, 'Limit')):
+            response = self.request('/api/news')
+            self.assertEqual(response['status'], 429)
+            self.assertEqual(response['headers']['Retry-After'], '60')
+            self.assertEqual(response['headers']['Cache-Control'], 'no-store')
+        with patch('app.get_news', side_effect=RuntimeError('private-key')), self.assertLogs('app', level='ERROR') as logs:
+            response = self.request('/api/news')
+        self.assertEqual(response['status'], 500)
+        self.assertNotIn('private-key', str(response) + str(logs.output))
+
+    def test_static_files_and_traversal(self):
+        import tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / 'dist'
+            root.mkdir()
+            (root / 'index.html').write_text('<h1>Newsroom</h1>')
+            (root / '.hidden').write_text('hidden')
+            secret = Path(directory) / 'secret'
+            secret.write_text('private')
+            (root / 'outside').symlink_to(secret)
+            with patch('app.DIST', root):
+                self.assertEqual(self.request('/')['body'], b'<h1>Newsroom</h1>')
+                self.assertEqual(self.request('/', 'HEAD')['body'], b'')
+                for path in ['/../secret', '/.hidden', '/outside', '/missing', '/assets/']:
+                    self.assertEqual(self.request(path)['status'], 404, path)
+
+
 if __name__ == '__main__':
     unittest.main()

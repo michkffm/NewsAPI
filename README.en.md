@@ -38,7 +38,7 @@ Bookmarks store only article titles, links, sections and publication dates in th
 | --- | --- |
 | Frontend | React 18, React Router 7, CSS |
 | Build | Vite 8, npm |
-| Backend | Python 3, standard library |
+| Backend | Python 3, WSGI, Gunicorn |
 | News | The Guardian Open Platform |
 | Hosting | Render web service |
 
@@ -56,11 +56,13 @@ Results are cached in memory for five minutes. New provider requests are limited
 
 ## Running locally
 
-Requirements: Node.js 22.12 or later within version 22, npm and Python 3.
+Requirements: Node.js 22.12 or later within version 22, npm and Python 3.10 or later.
 
 ```sh
 git clone https://github.com/michkffm/NewsAPI.git
 cd NewsAPI
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
 npm ci
 npm run build
 ```
@@ -68,7 +70,7 @@ npm run build
 Set `GUARDIAN_API_KEY` in your terminal to your own key, keeping it out of files and command examples. Then run:
 
 ```sh
-python3 server/app.py
+.venv/bin/python server/app.py
 ```
 
 Open **http://localhost:8766/**. Without a key, the app displays a configuration message. For frontend development, also run `npm run dev`; Vite proxies `/api` to the local Python server.
@@ -80,14 +82,16 @@ Open **http://localhost:8766/**. Without a key, the app displays a configuration
 | `GUARDIAN_API_KEY` | Secret Guardian API key, backend only |
 | `PORT` | Server port; defaults to 8766 locally, set automatically by Render |
 
-`render.yaml` describes a free Python web service. Build: `npm ci && npm run build`. Start: `python3 server/app.py`. Store the key as a secret environment variable in the Render dashboard. A Render Static Site cannot run the backend. Free web services may sleep when inactive and take some time to start on the next request.
+`render.yaml` describes a free Python web service. Build: `pip install -r requirements.txt && npm ci && npm run build`. Start: `gunicorn --config gunicorn.conf.py server.app:application`. Store the key as a secret environment variable in the Render dashboard. A Render Static Site cannot run the backend. Free web services may sleep when inactive and take some time to start on the next request.
 
 The previous RSS integration has been replaced. Earlier NewsAPI keys may remain in Git history or old builds and must be revoked with the previous provider.
+
+Gunicorn handles HTTP serving in production. One worker with four threads shares the cache and request budget; multiple workers or instances would require shared storage. `gunicorn.conf.py` sets timeouts and HTTP request limits. Starting the Python file directly is intended for local development only. On Windows, use `.venv\Scripts\python.exe` for Python commands.
 
 ## Tests
 
 ```sh
-python3 -m unittest discover -s server
+.venv/bin/python -m unittest discover -s server
 npm run lint
 npm run build
 npm audit
